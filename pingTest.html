@@ -66,6 +66,7 @@
         const startTime = performance.now(); // Start time
 
         while (performance.now() -startTime < pingDuration) {
+            pingAverageText.textContent = "ms"
             try {
                 const pingTime = await pingHost(host);
                 pingTimes.push(pingTime);
