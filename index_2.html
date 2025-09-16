@@ -3,79 +3,91 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sonnaz Group | Ping Test</title>
-  <style>
-    #ping-text {
-      font-size: 2em;
-      font-weight: bold;
-      transition: color 0.2s;
-    }
-  </style>
+  <title>Sonnaz Group | Speedtest</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="body-container">
-        <h1>Ping Test</h1>
-        <p id="ping-text">Click "Test Ping"</p>
+        <h2 id="ping-box-title">Speed Test</h2>
+        <p id="ping-text"></p>
+        <p id="ping-average-text"></p>
         <button id="ping-test-button">Test Ping</button>
     </div>
-
+</body>
 <script>
-const host = 'https://api.github.com'; // Must support CORS
-const pingText = document.getElementById('ping-text');
-const pingButton = document.getElementById('ping-test-button');
+    // Supported Website
+    const host = 'https://api.github.com'; 
 
-function getColorForPing(ms) {
-    // Map 20-200ms to 0-1
-    const clamped = Math.min(Math.max(ms, 20), 200);
-    const ratio = (clamped - 20) / (200 - 20);
+    function getGradientColor(percent) {
+        let r, g, b = 0;
 
-    // Interpolate green (0,255,0) → yellow (255,255,0) → red (255,0,0)
-    let r, g;
-    if (ratio < 0.5) {
-        // Green → Yellow
-        r = Math.round(255 * (ratio * 2));
-        g = 255;
-    } else {
-        // Yellow → Red
-        r = 255;
-        g = Math.round(255 * (1 - (ratio - 0.5) * 2));
-    }
-    return `rgb(${r},${g},0)`;
-}
-
-async function pingOnce(host) {
-    const start = performance.now();
-    await fetch(host, { method: 'HEAD', cache: 'no-cache' });
-    const end = performance.now();
-    return end - start;
-}
-
-pingButton.addEventListener('click', async () => {
-    pingButton.disabled = true;
-    const pingTimes = [];
-    const interval = 100; // ms
-    const duration = 10000; // 10 seconds
-    const startTime = performance.now();
-
-    while (performance.now() - startTime < duration) {
-        try {
-            const time = await pingOnce(host);
-            pingTimes.push(time);
-
-            // Compute average
-            const avg = pingTimes.reduce((a,b) => a+b, 0) / pingTimes.length;
-            pingText.textContent = `${avg.toFixed(2)} ms`;
-            pingText.style.color = getColorForPing(avg);
-
-        } catch (err) {
-            console.error("Ping failed:", err);
+        if (percent <= 50) {
+            // Red to Yellow-ish
+            r = 255;
+            g = Math.round(220 * (percent / 50));  // max green 220 instead of 255
+        } else {
+            // Yellow-ish to Darker Green
+            g = 180 + Math.round(40 * ((100 - percent) / 50)); // g goes 220->180
+            r = Math.round(255 * ((100 - percent) / 50));       // r goes 255->0
         }
 
-        await new Promise(resolve => setTimeout(resolve, interval));
+        return `rgb(${r},${g},${b})`;
     }
 
-    pingButton.disabled = false;
-});
+    async function pingHost(host, count = 1) {
+        let total = 0;
+        for (let i = 0; i < count; i++) {
+            const start = performance.now();
+            await fetch(host, { method: 'HEAD', cache: 'no-cache' });
+            const end = performance.now();
+            const time = end - start;
+            // console.log(`Ping ${i + 1}: ${time.toFixed(2)} ms`);
+            total += time;
+        }
+        const avg = total / count;
+        return avg;
+    }
+
+
+    const pingText = document.getElementById('ping-text');
+    const pingButton = document.getElementById('ping-test-button');
+    const pingAverageText = document.getElementById('ping-average-text')
+
+    // TODO: Make button switch to cancel while it is going and if you press it, it stop the ping test
+    pingButton.addEventListener('click', async () => {
+        
+        // Diable button while testing
+        pingButton.disabled = true;
+
+        // Setup
+        const pingTimes = [];
+        const pingInterval = 100; // ms (0.1 seconds)
+        const pingDuration = 10000; // ms (10 seconds)
+        const startTime = performance.now(); // Start time
+
+        while (performance.now() -startTime < pingDuration) {
+            try {
+                const pingTime = await pingHost(host);
+                pingTimes.push(pingTime);
+
+                pingText.textContent = `${pingTime.toFixed(0)}`;
+                pingText.style.color = getGradientColor(100 - pingTime + 15)
+            } catch (err) {
+                console.error('Ping failed:', err);
+            }
+            await new Promise(resolve => setTimeout(resolve, pingInterval));
+        }
+        // Enable button 
+        pingButton.disabled = false;
+
+        // Set label to average
+        const pingAverage = pingTimes.reduce((a,b) => a+b, 0) / pingTimes.length;
+        pingText.textContent = `${pingAverage.toFixed(0)}`;
+        pingText.style.color = getGradientColor(100 - pingAverage + 15)
+        pingAverageText.textContent = "avg"
+    });
+
+    
+
 </script>
-</body>
 </html>

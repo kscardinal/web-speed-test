@@ -43,7 +43,24 @@ body {
       background: #45a049;
     }
 
+    .body-container button:disabled {
+        background: #999999;
+    }
+
+    #ping-box-title {
+        margin-bottom: 2rem;
+    }
+
     #ping-text {
-        font-size: 4rem;
+        font-size: 3rem;
         color: black;
+        margin: 0rem;
+    }
+
+    #ping-average-text {
+        color: #000000;
+        opacity: 30%;
+        font-size: 1rem;
+        font-weight: bold;
+        margin-top: 0rem;
     }
