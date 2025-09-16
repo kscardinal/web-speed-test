@@ -55,6 +55,16 @@ body {
         font-size: 3rem;
         color: black;
         margin: 0rem;
+        display: inline;
+    }
+
+    #ping-ms-text {
+        color: #000000;
+        opacity: 30%;
+        font-size: 1rem;
+        font-weight: bold;
+        margin: 0rem;
+        display: inline;
     }
 
     #ping-average-text {
@@ -63,4 +73,8 @@ body {
         font-size: 1rem;
         font-weight: bold;
         margin-top: 0rem;
+    }
+
+    #ping-text-container {
+        display: inline;
     }

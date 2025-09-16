@@ -9,7 +9,10 @@
 <body>
     <div class="body-container">
         <h2 id="ping-box-title">Speed Test</h2>
-        <p id="ping-text"></p>
+        <div id="ping-text-container">
+            <p id="ping-text"></p>
+            <p id="ping-ms-text"></p>
+        </div>
         <p id="ping-average-text"></p>
         <button id="ping-test-button">Test Ping</button>
     </div>
@@ -51,7 +54,8 @@
 
     const pingText = document.getElementById('ping-text');
     const pingButton = document.getElementById('ping-test-button');
-    const pingAverageText = document.getElementById('ping-average-text')
+    const pingAverageText = document.getElementById('ping-average-text');
+    const pingUnitText = document.getElementById('ping-ms-text');
 
     // TODO: Make button switch to cancel while it is going and if you press it, it stop the ping test
     pingButton.addEventListener('click', async () => {
@@ -66,7 +70,8 @@
         const startTime = performance.now(); // Start time
 
         while (performance.now() -startTime < pingDuration) {
-            pingAverageText.textContent = "ms"
+            pingAverageText.textContent = ""
+            pingUnitText.textContent = "ms"
             try {
                 const pingTime = await pingHost(host);
                 pingTimes.push(pingTime);
@@ -85,7 +90,8 @@
         const pingAverage = pingTimes.reduce((a,b) => a+b, 0) / pingTimes.length;
         pingText.textContent = `${pingAverage.toFixed(0)}`;
         pingText.style.color = getGradientColor(100 - pingAverage + 15)
-        pingAverageText.textContent = "avg"
+        pingAverageText.textContent = ""
+        pingUnitText.textContent = "ms avg."
     });
 
     
