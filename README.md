@@ -7,3 +7,16 @@
 ![GitHub last commit](https://img.shields.io/github/last-commit/kscardinal/web-speed-test)
 ![GitHub contributors](https://img.shields.io/github/contributors/kscardinal/web-speed-test)
 
+---
+
+## Instruction
+
+1. Install UV
+```
+```
+
+2. Intall NodeJS
+```
+```
+
+3. 
