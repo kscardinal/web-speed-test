@@ -1,0 +1,16 @@
+{
+  "name": "python-speed-test",
+  "version": "1.0.0",
+  "description": "`python-speed-test` is a small Python application for testing network conenctions and getting a representative speed for uploads and downloads.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "node-fetch": "^3.3.2",
+    "ping": "^0.4.4"
+  }
+}

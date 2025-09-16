@@ -1,0 +1,17 @@
+[project]
+name = "python-speed-test"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "kscardinal", email = "kschang@cardinalhs.net" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "icecream>=2.1.8",
+    "pythonping>=1.1.4",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

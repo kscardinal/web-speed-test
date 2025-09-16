@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sonnaz Group | Speedtest</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="body-container">
+        <h1>Speed Test</h1>
+        <p id="ping-text"></p>
+        <button id="ping-test-button">Test Ping</button>
+    </div>
+</body>
+<script>
+    // Supported Website
+    const host = 'https://api.github.com'; 
+
+    function getGradientColor(percent) {
+        let r, g, b = 0;
+
+        if (percent <= 50) {
+            // Red to Yellow-ish
+            r = 255;
+            g = Math.round(220 * (percent / 50));  // max green 220 instead of 255
+        } else {
+            // Yellow-ish to Darker Green
+            g = 180 + Math.round(40 * ((100 - percent) / 50)); // g goes 220->180
+            r = Math.round(255 * ((100 - percent) / 50));       // r goes 255->0
+        }
+
+        return `rgb(${r},${g},${b})`;
+    }
+
+    async function pingHost(host, count = 5) {
+        let total = 0;
+        for (let i = 0; i < count; i++) {
+            const start = performance.now();
+            await fetch(host, { method: 'HEAD', cache: 'no-cache' });
+            const end = performance.now();
+            const time = end - start;
+            console.log(`Ping ${i + 1}: ${time.toFixed(2)} ms`);
+            total += time;
+        }
+        const avg = total / count;
+        return avg;
+    }
+
+
+    const pingText = document.getElementById('ping-text');
+    const pingButton = document.getElementById('ping-test-button');
+
+    pingButton.addEventListener('click', async () => {
+        const pingTime = await pingHost(host, 10);
+        pingText.textContent = `${pingTime.toFixed(2)} ms`;
+        pingText.style.color = getGradientColor(100 - pingTime + 15);
+    });
+
+    
+
+</script>
+</html>
