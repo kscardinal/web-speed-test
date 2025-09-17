@@ -104,30 +104,18 @@
         const fullArc = 2 * Math.PI * radius * 0.75; // 270° span
         const fullCircle = 2 * Math.PI * radius // 360° span 
 
-        // Timer
-        while (performance.now() - startTime < pingDuration) {
-
-            // Set new progress on the "speedometer"
-            const percent = (performance.now() - startTime) / pingDuration
+        function animateProgress(time) {
+            // Set up timing
+            const elapsed = time - startTime;
+            const percent = Math.min(elapsed / pingDuration, 1);
+            
+            // Smoothly update the progress bar
             const startNumber = fullArc * percent
             const endNumber = fullCircle - startNumber
             progress.style.strokeDasharray = `${startNumber} ${endNumber}`;
 
             // Turn on the 'ms' label below the ping number
             pingUnitText.style.display = "inline";
-        
-            // Test ping and display result
-            try {
-                const pingTime = await pingHost(host);
-                pingTimes.push(pingTime);
-
-                pingText.textContent = `${pingTime.toFixed(0)}`;
-                pingText.style.fill = getGradientColor(pingToScore(pingTime))
-                progress.style.stroke = getGradientColor(pingToScore(pingTime))
-            } catch (err) {
-                console.error('Ping failed:', err);
-            }
-            await new Promise(resolve => setTimeout(resolve, pingInterval));
 
             // If it was cancelled, just stop here
             if (!isTesting) {
@@ -137,23 +125,23 @@
                 pingUnitText.textContent = "";
                 return;
             };
-        
-        if (percent < 1 && isTesting) {
-            requestAnimationFrame(animateProgress);
-        } else {
-        // Otherwise finish normally
-        isTesting = false;
-        progress.style.strokeDasharray = "318 106";
-        pingButton.textContent = "Test Ping";
-        pingButton.style.background = "#4CAF50";
+
+            if (percent < 1 && isTesting) {
+                requestAnimationFrame(animateProgress);
+            } else {
+                // Finish normally
+                isTesting = false;
+                progress.style.strokeDasharray = "318 106";
+                pingButton.textContent = "Test Ping";
+                pingButton.style.background = "#4CAF50";
 
                 // Set label to average
                 const pingAverage = pingTimes.reduce((a,b) => a+b, 0) / pingTimes.length;
                 pingText.textContent = `${pingAverage.toFixed(0)}`;
                 pingText.style.fill = getGradientColor(pingToScore(pingAverage));
                 progress.style.stroke = getGradientColor(pingToScore(pingAverage));
-                pingAverageText.textContent = "average";
             }
+
         }
 
         requestAnimationFrame(animateProgress);
