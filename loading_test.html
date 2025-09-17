@@ -34,8 +34,8 @@
 
   .progress {
     stroke: #00aaff; /* Blue fill */
-    stroke-dasharray: 318;
-    stroke-dashoffset: 318; /* Start empty */
+    stroke-dasharray: 0 424;
+    stroke-dashoffset: 0; /* Start empty */
   }
 
   button {
@@ -61,12 +61,11 @@
 const progress = document.querySelector('.progress');
 const radius = 67.5;
 const fullArc = 2 * Math.PI * radius * 0.75; // 270° span
-progress.style.strokeDasharray = fullArc;
-progress.style.strokeDashoffset = fullArc; // Start fully hidden
+const fullCircle = 2 * Math.PI * radius // 360° span 
 
 document.getElementById('start').addEventListener('click', () => {
   let startTime = null;
-  const duration = 10000; // 10 seconds
+  const duration = 5000; // 5 seconds
 
   function animate(time) {
     if (!startTime) startTime = time;
@@ -74,7 +73,9 @@ document.getElementById('start').addEventListener('click', () => {
     const percent = Math.min(elapsed / duration, 1);
 
     // Reduce dash offset to reveal blue from left (225°) to right (-45°)
-    progress.style.strokeDashoffset = fullArc * (1 - percent);
+    const startNumber = fullArc * percent
+    const endNumber = fullCircle - startNumber
+    progress.style.strokeDasharray = `${startNumber} ${endNumber}`;
 
     if (percent < 1) {
       requestAnimationFrame(animate);
