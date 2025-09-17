@@ -40,6 +40,17 @@
         return `rgb(${r},${g},${b})`;
     }
 
+    function pingToScore(ping) {
+        let score = 100 - ping + 15;
+
+        // Clamp score between 0 and 100
+        if (score < 0) score = 0;
+        if (score > 100) score = 100;
+
+        return score;
+    }
+
+
     async function pingHost(host, count = 1) {
         let total = 0;
         for (let i = 0; i < count; i++) {
@@ -107,8 +118,8 @@
                 pingTimes.push(pingTime);
 
                 pingText.textContent = `${pingTime.toFixed(0)}`;
-                pingText.style.fill = getGradientColor(100 - pingTime + 15)
-                progress.style.stroke = getGradientColor(100 - pingTime + 15)
+                pingText.style.fill = getGradientColor(pingToScore(pingTime))
+                progress.style.stroke = getGradientColor(pingToScore(pingTime))
             } catch (err) {
                 console.error('Ping failed:', err);
             }
@@ -122,7 +133,6 @@
                 pingUnitText.textContent = "";
                 return;
             };
-
         }
 
         // Otherwise finish normally
@@ -134,7 +144,8 @@
         // Set label to average
         const pingAverage = pingTimes.reduce((a,b) => a+b, 0) / pingTimes.length;
         pingText.textContent = `${pingAverage.toFixed(0)}`;
-        pingText.style.color = getGradientColor(100 - pingAverage + 15)
+        pingText.style.fill = getGradientColor(pingToScore(pingAverage));
+        progress.style.stroke = getGradientColor(pingToScore(pingAverage));
     });
 
     
