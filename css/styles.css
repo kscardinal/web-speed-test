@@ -1,6 +1,6 @@
 body {
       font-family: Arial, sans-serif;
-      background: #f0f2f5;
+      background: #1B1C1E;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -9,7 +9,7 @@ body {
     }
 
     .body-container {
-      background: #fff;
+      background: #333;
       padding: 2rem;
       border-radius: 12px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
@@ -19,12 +19,12 @@ body {
 
    .body-container h2 {
       margin-bottom: 0rem;
-      color: #333;
+      color: #FFF;
     }
 
    .body-container h3 {
       margin-bottom: 0rem;
-      color: #666666;
+      color: #FFF;
    }
 
     .body-container button {
@@ -49,6 +49,7 @@ body {
 
     #ping-box-title {
         margin: 0rem;
+        font-size: 2.5rem;
     }
 
   svg {
@@ -64,7 +65,7 @@ body {
   }
 
   .background {
-    stroke: #DDD; /* Gray arc */
+    stroke: #666; /* Gray arc */
     stroke-dasharray: 318; /* 270° portion */
     stroke-dashoffset: 0;   /* Full gray arc */
   }
@@ -78,7 +79,7 @@ body {
   #ping-text {
     font-size: 2.5rem;
     font-weight: bold;
-    fill: #000000;
+    fill: #FFF;
     margin: 0rem;
     text-anchor: middle;
     dominant-baseline: middle;
@@ -87,8 +88,8 @@ body {
   }
 
   #ping-ms-text {
-        fill: #000000;
-        opacity: 30%;
+        fill: #FFF;
+        opacity: 60%;
         font-size: 1rem;
         font-weight: bold;
         margin: 0rem;

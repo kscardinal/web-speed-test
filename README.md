@@ -39,3 +39,19 @@ npm init -y
 ``` bash
 npm install ping
 ```
+
+---
+
+## Testing Webpage
+
+1. Set up php server
+``` bash
+php -S localhost:8000
+```
+
+2. Go to website
+```
+http://localhost:8000/speedTest.php
+```
+
+---
