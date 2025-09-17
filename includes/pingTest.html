@@ -15,6 +15,7 @@
             <circle class="progress" cx="100" cy="100" r="67.5"/>
             <text x="100" y="100" id="ping-text"></text>
             <text x="100" y="125" id="ping-ms-text">ms</text>
+            <text x="100" y="67.5" id="ping-average-text"></text>
         </svg>
 
         <button id="ping-test-button">Test Ping</button>
@@ -69,6 +70,7 @@
     const pingText = document.getElementById('ping-text');
     const pingButton = document.getElementById('ping-test-button');
     const pingUnitText = document.getElementById('ping-ms-text');
+    const pingAverageText = document.getElementById('ping-average-text');
     const progress = document.querySelector('.progress');
     const progressBar = document.querySelector('svg');   
 
@@ -89,6 +91,7 @@
         pingButton.textContent = "Cancel";
         pingButton.style.background = "#FF4444";
         pingUnitText.textContent = "ms";
+        pingAverageText.textContent = "";
 
         // Timing Variables
         const pingTimes = [];
@@ -134,19 +137,41 @@
                 pingUnitText.textContent = "";
                 return;
             };
-        }
-
+        
+        if (percent < 1 && isTesting) {
+            requestAnimationFrame(animateProgress);
+        } else {
         // Otherwise finish normally
         isTesting = false;
         progress.style.strokeDasharray = "318 106";
         pingButton.textContent = "Test Ping";
         pingButton.style.background = "#4CAF50";
 
-        // Set label to average
-        const pingAverage = pingTimes.reduce((a,b) => a+b, 0) / pingTimes.length;
-        pingText.textContent = `${pingAverage.toFixed(0)}`;
-        pingText.style.fill = getGradientColor(pingToScore(pingAverage));
-        progress.style.stroke = getGradientColor(pingToScore(pingAverage));
+                // Set label to average
+                const pingAverage = pingTimes.reduce((a,b) => a+b, 0) / pingTimes.length;
+                pingText.textContent = `${pingAverage.toFixed(0)}`;
+                pingText.style.fill = getGradientColor(pingToScore(pingAverage));
+                progress.style.stroke = getGradientColor(pingToScore(pingAverage));
+                pingAverageText.textContent = "average";
+            }
+        }
+
+        requestAnimationFrame(animateProgress);
+
+        while (performance.now() - startTime < pingDuration && isTesting) { 
+            try {
+                const pingTime = await pingHost(host);
+                pingTimes.push(pingTime);
+
+                pingText.textContent = `${pingTime.toFixed(0)}`;
+                pingText.style.fill = getGradientColor(pingToScore(pingTime))
+                progress.style.stroke = getGradientColor(pingToScore(pingTime))
+            } catch (err) {
+                console.error('Ping failed:', err);
+            }
+            await new Promise(resolve => setTimeout(resolve, pingInterval));
+        }
+       
     });
 
     

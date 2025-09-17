@@ -101,12 +101,12 @@ body {
     }
 
     #ping-average-text {
-        fill: #000000;
-        opacity: 30%;
+        fill: #FFF;
+        opacity: 60%;
         font-size: 1rem;
         font-weight: bold;
-        margin-top: 0rem;
-         text-anchor: middle;
+        margin: 0rem;
+        text-anchor: middle;
         dominant-baseline: middle;
         transform: rotate(-135deg); /* cancel parent SVG rotation */
         transform-origin: center;
