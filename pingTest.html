@@ -60,12 +60,23 @@
     const pingUnitText = document.getElementById('ping-ms-text');
     const progress = document.querySelector('.progress');
 
+    let isTesting = false; // Global Variable
 
-    // TODO: Make button switch to cancel while it is going and if you press it, it stop the ping test
     pingButton.addEventListener('click', async () => {
-        
-        // Diable button while testing
-        pingButton.disabled = true;
+
+        // If already running → cancel
+        if (isTesting) {
+            isTesting = false;
+            pingButton.textContent = "Test Ping"; 
+            pingButton.style.background = "#4CAF50";
+            return;
+        }
+
+        // Otherwise start the test
+        isTesting = true;
+        pingButton.textContent = "Cancel";
+        pingButton.style.background = "#FF4444";
+        pingUnitText.textContent = "ms";
 
         // Timing Variables
         const pingTimes = [];
@@ -102,11 +113,23 @@
                 console.error('Ping failed:', err);
             }
             await new Promise(resolve => setTimeout(resolve, pingInterval));
+
+            // If it was cancelled, just stop here
+            if (!isTesting) {
+                progress.style.strokeDasharray = "0 424";
+                progress.style.stroke = "#4CAF50";
+                pingText.textContent = "";
+                pingUnitText.textContent = "";
+                return;
+            };
+
         }
 
-        // Enable button  and set 'speedometer to 100%'
+        // Otherwise finish normally
+        isTesting = false;
         progress.style.strokeDasharray = "318 106";
-        pingButton.disabled = false;
+        pingButton.textContent = "Test Ping";
+        pingButton.style.background = "#4CAF50";
 
         // Set label to average
         const pingAverage = pingTimes.reduce((a,b) => a+b, 0) / pingTimes.length;

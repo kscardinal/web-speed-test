@@ -30,7 +30,7 @@ body {
     .body-container button {
       width: 200px;
       padding: 10px;
-      margin: 20px 0;
+      margin: 0rem;
       background: #4CAF50;
       border: none;
       color: white;
@@ -48,31 +48,19 @@ body {
     }
 
     #ping-box-title {
-        margin-bottom: 2rem;
-    }
-
-    #ping-text {
-        font-size: 3rem;
-        color: black;
         margin: 0rem;
-        display: inline;
     }
-
-    
-
-    #ping-text-container {
-        display: inline;
-    }
-
 
   svg {
     transform: rotate(135deg); /* Align left end at 225° */
+    margin: 0rem;
   }
 
   circle {
     fill: none;
     stroke-width: 20;
     stroke-linecap: round; /* Rounded ends */
+    margin: 0rem;
   }
 
   .background {
