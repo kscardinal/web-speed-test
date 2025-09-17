@@ -38,6 +38,15 @@
     stroke-dashoffset: 0; /* Start empty */
   }
 
+  text {
+    font-size: 24px;
+    fill: white;
+    text-anchor: middle;
+    dominant-baseline: middle;
+    transform: rotate(-135deg); /* cancel parent SVG rotation */
+    transform-origin: center;
+  }
+
   button {
     margin-top: 30px;
     padding: 10px 20px;
@@ -53,12 +62,14 @@
   <circle class="background" cx="100" cy="100" r="67.5"/>
   <!-- Blue progress arc -->
   <circle class="progress" cx="100" cy="100" r="67.5"/>
+  <text x="100" y="100">0%</text>
 </svg>
 
 <button id="start">Start Progress</button>
 
 <script>
 const progress = document.querySelector('.progress');
+const progressText = document.querySelector('text')
 const radius = 67.5;
 const fullArc = 2 * Math.PI * radius * 0.75; // 270° span
 const fullCircle = 2 * Math.PI * radius // 360° span 
@@ -76,6 +87,7 @@ document.getElementById('start').addEventListener('click', () => {
     const startNumber = fullArc * percent
     const endNumber = fullCircle - startNumber
     progress.style.strokeDasharray = `${startNumber} ${endNumber}`;
+    progressText.textContent = `${Math.round(percent * 100)}%`;
 
     if (percent < 1) {
       requestAnimationFrame(animate);
