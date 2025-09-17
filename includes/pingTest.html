@@ -65,11 +65,12 @@
         return avg;
     }
 
-
+    const titleText = document.getElementById('ping-box-title');
     const pingText = document.getElementById('ping-text');
     const pingButton = document.getElementById('ping-test-button');
     const pingUnitText = document.getElementById('ping-ms-text');
     const progress = document.querySelector('.progress');
+    const progressBar = document.querySelector('svg');   
 
     let isTesting = false; // Global Variable
 
