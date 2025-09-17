@@ -53,6 +53,43 @@
     font-size: 16px;
     cursor: pointer;
   }
+
+  #ping-text {
+    font-size: 2.5rem;
+    font-weight: bold;
+    fill: #FFF;
+    margin: 0rem;
+    text-anchor: middle;
+    dominant-baseline: middle;
+    transform: rotate(-135deg); /* cancel parent SVG rotation */
+    transform-origin: center;
+  }
+
+  #ping-ms-text {
+        fill: #FFF;
+        opacity: 30%;
+        font-size: 1rem;
+        font-weight: bold;
+        margin: 0rem;
+        display: inline;
+         text-anchor: middle;
+        dominant-baseline: middle;
+        transform: rotate(-135deg); /* cancel parent SVG rotation */
+        transform-origin: center;
+    }
+
+    #ping-average-text {
+        fill: #FFF;
+        opacity: 30%;
+        font-size: 1rem;
+        font-weight: bold;
+        margin-top: 0rem;
+         text-anchor: middle;
+        dominant-baseline: middle;
+        transform: rotate(-135deg); /* cancel parent SVG rotation */
+        transform-origin: center;
+    }
+
 </style>
 </head>
 <body>
@@ -62,7 +99,9 @@
   <circle class="background" cx="100" cy="100" r="67.5"/>
   <!-- Blue progress arc -->
   <circle class="progress" cx="100" cy="100" r="67.5"/>
-  <text x="100" y="100">0%</text>
+  <text x="100" y="100" id="ping-text">34</text>
+  <text x="100" y="125" id="ping-ms-text">ms</text>
+  <text x="100" y="150" id="ping-average-text">avg.</text>
 </svg>
 
 <button id="start">Start Progress</button>

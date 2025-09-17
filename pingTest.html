@@ -9,11 +9,14 @@
 <body>
     <div class="body-container">
         <h2 id="ping-box-title">Speed Test</h2>
-        <div id="ping-text-container">
-            <p id="ping-text"></p>
-            <p id="ping-ms-text"></p>
-        </div>
-        <p id="ping-average-text"></p>
+        
+        <svg width="300" height="300" viewBox="0 0 200 200">
+            <circle class="background" cx="100" cy="100" r="67.5"/>
+            <circle class="progress" cx="100" cy="100" r="67.5"/>
+            <text x="100" y="100" id="ping-text"></text>
+            <text x="100" y="125" id="ping-ms-text">ms</text>
+        </svg>
+
         <button id="ping-test-button">Test Ping</button>
     </div>
 </body>
@@ -54,8 +57,9 @@
 
     const pingText = document.getElementById('ping-text');
     const pingButton = document.getElementById('ping-test-button');
-    const pingAverageText = document.getElementById('ping-average-text');
     const pingUnitText = document.getElementById('ping-ms-text');
+    const progress = document.querySelector('.progress');
+
 
     // TODO: Make button switch to cancel while it is going and if you press it, it stop the ping test
     pingButton.addEventListener('click', async () => {
@@ -63,35 +67,51 @@
         // Diable button while testing
         pingButton.disabled = true;
 
-        // Setup
+        // Timing Variables
         const pingTimes = [];
         const pingInterval = 100; // ms (0.1 seconds)
-        const pingDuration = 10000; // ms (10 seconds)
+        const pingDuration = 7500; // ms (7.5 seconds)
         const startTime = performance.now(); // Start time
 
-        while (performance.now() -startTime < pingDuration) {
-            pingAverageText.textContent = ""
-            pingUnitText.textContent = "ms"
+        // Timing Circle Variables
+        const radius = 67.5;
+        const fullArc = 2 * Math.PI * radius * 0.75; // 270° span
+        const fullCircle = 2 * Math.PI * radius // 360° span 
+
+        // Timer
+        while (performance.now() - startTime < pingDuration) {
+
+            // Set new progress on the "speedometer"
+            const percent = (performance.now() - startTime) / pingDuration
+            const startNumber = fullArc * percent
+            const endNumber = fullCircle - startNumber
+            progress.style.strokeDasharray = `${startNumber} ${endNumber}`;
+
+            // Turn on the 'ms' label below the ping number
+            pingUnitText.style.display = "inline";
+        
+            // Test ping and display result
             try {
                 const pingTime = await pingHost(host);
                 pingTimes.push(pingTime);
 
                 pingText.textContent = `${pingTime.toFixed(0)}`;
-                pingText.style.color = getGradientColor(100 - pingTime + 15)
+                pingText.style.fill = getGradientColor(100 - pingTime + 15)
+                progress.style.stroke = getGradientColor(100 - pingTime + 15)
             } catch (err) {
                 console.error('Ping failed:', err);
             }
             await new Promise(resolve => setTimeout(resolve, pingInterval));
         }
-        // Enable button 
+
+        // Enable button  and set 'speedometer to 100%'
+        progress.style.strokeDasharray = "318 106";
         pingButton.disabled = false;
 
         // Set label to average
         const pingAverage = pingTimes.reduce((a,b) => a+b, 0) / pingTimes.length;
         pingText.textContent = `${pingAverage.toFixed(0)}`;
         pingText.style.color = getGradientColor(100 - pingAverage + 15)
-        pingAverageText.textContent = ""
-        pingUnitText.textContent = "ms avg."
     });
 
     

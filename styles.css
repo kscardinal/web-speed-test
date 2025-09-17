@@ -58,23 +58,67 @@ body {
         display: inline;
     }
 
-    #ping-ms-text {
-        color: #000000;
+    
+
+    #ping-text-container {
+        display: inline;
+    }
+
+
+  svg {
+    transform: rotate(135deg); /* Align left end at 225° */
+  }
+
+  circle {
+    fill: none;
+    stroke-width: 20;
+    stroke-linecap: round; /* Rounded ends */
+  }
+
+  .background {
+    stroke: #DDD; /* Gray arc */
+    stroke-dasharray: 318; /* 270° portion */
+    stroke-dashoffset: 0;   /* Full gray arc */
+  }
+
+  .progress {
+    stroke: #4CAF50; /* Green fill */
+    stroke-dasharray: 0 424;
+    stroke-dashoffset: 0; /* Start empty */
+  }
+
+  #ping-text {
+    font-size: 2.5rem;
+    font-weight: bold;
+    fill: #000000;
+    margin: 0rem;
+    text-anchor: middle;
+    dominant-baseline: middle;
+    transform: rotate(-135deg); /* cancel parent SVG rotation */
+    transform-origin: center;
+  }
+
+  #ping-ms-text {
+        fill: #000000;
         opacity: 30%;
         font-size: 1rem;
         font-weight: bold;
         margin: 0rem;
-        display: inline;
+        display: none;
+         text-anchor: middle;
+        dominant-baseline: middle;
+        transform: rotate(-135deg); /* cancel parent SVG rotation */
+        transform-origin: center;
     }
 
     #ping-average-text {
-        color: #000000;
+        fill: #000000;
         opacity: 30%;
         font-size: 1rem;
         font-weight: bold;
         margin-top: 0rem;
-    }
-
-    #ping-text-container {
-        display: inline;
+         text-anchor: middle;
+        dominant-baseline: middle;
+        transform: rotate(-135deg); /* cancel parent SVG rotation */
+        transform-origin: center;
     }
