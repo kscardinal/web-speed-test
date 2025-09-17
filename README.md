@@ -9,14 +9,33 @@
 
 ---
 
-## Instruction
+## Setup Instructions
+
+### Python (UV)
 
 1. Install UV
+``` bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+uv self update
+uv python install 3.13
 ```
+2.  Set up venv
+``` bash
+uv venv
+```
+3. Install all dependecies
+``` bash
+uv pip install -e .
 ```
 
-2. Intall NodeJS
-```
+### JavaScript (NodeJS)
+
+1. Initialize NodeJS
+``` bash
+npm init -y
 ```
 
-3. 
+2. Install all dependecies
+``` bash
+npm install ping
+```
