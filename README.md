@@ -51,7 +51,7 @@ php -S localhost:8000
 
 2. Go to website
 ```
-http://localhost:8000/speedTest.php
+http://localhost:8000/pingTest.php
 ```
 
 ---
