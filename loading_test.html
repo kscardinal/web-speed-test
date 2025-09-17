@@ -1,61 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Speedometer Progress</title>
-  <style>
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background: #111;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Speedometer Progress</title>
+<style>
+  body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #222;
+    color: white;
+    font-family: sans-serif;
+  }
 
-    svg {
-      transform: rotate(-135deg); /* rotate so arc starts at 225° */
-    }
+  svg {
+    transform: rotate(135deg); /* Align left end at 225° */
+  }
 
-    .track {
-      fill: none;
-      stroke: #555;
-      stroke-width: 20;
-      stroke-linecap: round;
-    }
+  circle {
+    fill: none;
+    stroke-width: 20;
+    stroke-linecap: round; /* Rounded ends */
+  }
 
-    .progress {
-      fill: none;
-      stroke: dodgerblue;
-      stroke-width: 20;
-      stroke-linecap: round;
-      stroke-dasharray: 0 1000;
-      transition: stroke-dasharray 1s linear;
-    }
-  </style>
+  .background {
+    stroke: #555; /* Gray arc */
+    stroke-dasharray: 318; /* 270° portion */
+    stroke-dashoffset: 0;   /* Full gray arc */
+  }
+
+  .progress {
+    stroke: #00aaff; /* Blue fill */
+    stroke-dasharray: 318;
+    stroke-dashoffset: 318; /* Start empty */
+  }
+
+  button {
+    margin-top: 30px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+</style>
 </head>
 <body>
-  <svg width="300" height="300" viewBox="0 0 300 300">
-    <circle class="track" cx="150" cy="150" r="120"
-      stroke-dasharray="565.48"
-      stroke-dashoffset="0"
-      pathLength="270"/>
-    <circle class="progress" cx="150" cy="150" r="120"
-      stroke-dasharray="565.48"
-      stroke-dashoffset="565.48"
-      pathLength="270"/>
-  </svg>
 
-  <script>
-    function setProgress(percent) {
-      const circle = document.querySelector('.progress');
-      const circumference = 2 * Math.PI * 120 * (270/360); // arc length
-      const offset = circumference - (percent/100) * circumference;
-      circle.style.strokeDasharray = `${circumference} ${circumference}`;
-      circle.style.strokeDashoffset = offset;
+<svg width="300" height="300" viewBox="0 0 200 200">
+  <!-- Gray background arc -->
+  <circle class="background" cx="100" cy="100" r="67.5"/>
+  <!-- Blue progress arc -->
+  <circle class="progress" cx="100" cy="100" r="67.5"/>
+</svg>
+
+<button id="start">Start Progress</button>
+
+<script>
+const progress = document.querySelector('.progress');
+const radius = 67.5;
+const fullArc = 2 * Math.PI * radius * 0.75; // 270° span
+progress.style.strokeDasharray = fullArc;
+progress.style.strokeDashoffset = fullArc; // Start fully hidden
+
+document.getElementById('start').addEventListener('click', () => {
+  let startTime = null;
+  const duration = 10000; // 10 seconds
+
+  function animate(time) {
+    if (!startTime) startTime = time;
+    const elapsed = time - startTime;
+    const percent = Math.min(elapsed / duration, 1);
+
+    // Reduce dash offset to reveal blue from left (225°) to right (-45°)
+    progress.style.strokeDashoffset = fullArc * (1 - percent);
+
+    if (percent < 1) {
+      requestAnimationFrame(animate);
     }
+  }
 
-    // Example: set 10% progress
-    setProgress(5);
-  </script>
+  requestAnimationFrame(animate);
+});
+</script>
+
 </body>
 </html>
