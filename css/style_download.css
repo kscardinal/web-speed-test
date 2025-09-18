@@ -1,0 +1,117 @@
+body {
+      font-family: Arial, sans-serif;
+      background: #1B1C1E;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .body-container {
+      background: #333;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 300px;
+      text-align: center;
+      margin-left: 2rem;
+      margin-right: 2rem;
+    }
+
+   .body-container h2 {
+      margin-bottom: 0rem;
+      color: #FFF;
+    }
+
+   .body-container h3 {
+      margin-bottom: 0rem;
+      color: #FFF;
+   }
+
+    .body-container button .download {
+      width: 200px;
+      padding: 10px;
+      margin: 0rem;
+      background: #4CAF50;
+      border: none;
+      color: white;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .body-container button:hover .download {
+      background: #45a049;
+    }
+
+    .body-container button:disabled .download {
+        background: #999999;
+    }
+
+  svg .download{
+    transform: rotate(135deg); /* Align left end at 225° */
+    margin: 0rem;
+  }
+
+  circle .download {
+    fill: none;
+    stroke-width: 20;
+    stroke-linecap: round; /* Rounded ends */
+    margin: 0rem;
+  }
+
+  .background .download {
+    stroke: #666; /* Gray arc */
+    stroke-dasharray: 318; /* 270° portion */
+    stroke-dashoffset: 0;   /* Full gray arc */
+  }
+
+  .progress .download {
+    stroke: #4CAF50; /* Green fill */
+    stroke-dasharray: 0 424;
+    stroke-dashoffset: 0; /* Start empty */
+  }
+
+    /* DOWNLOAD TESTING PAGE */
+
+  #test-box-title {
+    margin: 0rem;
+    font-size: 2.5rem;
+  }
+
+  #test-text {
+    font-size: 2.5rem;
+    font-weight: bold;
+    fill: #FFF;
+    margin: 0rem;
+    text-anchor: middle;
+    dominant-baseline: middle;
+    transform: rotate(-135deg); /* cancel parent SVG rotation */
+    transform-origin: center;
+  }
+
+  #test-unit-text {
+        fill: #FFF;
+        opacity: 60%;
+        font-size: 1rem;
+        font-weight: bold;
+        margin: 0rem;
+        display: none;
+         text-anchor: middle;
+        dominant-baseline: middle;
+        transform: rotate(-135deg); /* cancel parent SVG rotation */
+        transform-origin: center;
+    }
+
+    #test-average-text {
+        fill: #FFF;
+        opacity: 60%;
+        font-size: 1rem;
+        font-weight: bold;
+        margin: 0rem;
+        text-anchor: middle;
+        dominant-baseline: middle;
+        transform: rotate(-135deg); /* cancel parent SVG rotation */
+        transform-origin: center;
+    }
