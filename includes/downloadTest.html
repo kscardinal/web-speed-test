@@ -20,7 +20,8 @@
             <text x="177" y="150" class="min-max-label" id="max-label"></text>
         </svg>
 
-        <button id="downloadButton">Test Download</button>
+        <button id="download-test-button" class="testButton">Test Download</button>
+        <button id="scale-button" class="updateButton">Change scale</button>
     </div>
 </body>
 <script>
@@ -32,7 +33,7 @@
     const fileSize_500MB = 'http://162.243.22.90/500MB.bin';
     const fileSize_1GB = 'http://162.243.22.90/1GB.bin';
 
-    const topSpeed = 500;
+    let topSpeed = 500;
 
 
     function getGradientColor(percent) {
@@ -53,11 +54,12 @@
 
     const downloadTitleText = document.getElementById('test-box-title');
     const downloadResultText = document.getElementById('test-text');
-    const downloadTestButton = document.getElementById('downloadButton');
+    const downloadTestButton = document.getElementById('download-test-button');
     const downloadTestUnitText = document.getElementById('test-unit-text');
     const downloadTestAverageText = document.getElementById('test-average-text');
     const downloadProgress = document.getElementById('downloadProgress');
     const downloadProgressBar = document.getElementById('downloadSVG');   
+    const scaleButton = document.getElementById('scale-button');
 
     let downloadIsTesting = false; // Global Variable
 
@@ -183,7 +185,19 @@ downloadTestButton.addEventListener('click', async () => {
         maxLabel.textContent = topSpeed;
     });
 
-    
+
+    scaleButton.addEventListener('click', async () => {
+        if (topSpeed === 100) {
+            topSpeed = 250;
+        } else if (topSpeed === 250) {
+            topSpeed = 500;
+        } else if (topSpeed === 500) {
+            topSpeed = 1000;
+        } else {
+            topSpeed = 100;
+        }
+        document.getElementById('max-label').textContent = topSpeed;
+    });
 
 </script>
 </html>

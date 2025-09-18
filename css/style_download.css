@@ -29,7 +29,7 @@ body {
       color: #FFF;
    }
 
-    #downloadButton {
+    .testButton {
       width: 200px;
       padding: 10px;
       margin: 0rem;
@@ -41,11 +41,11 @@ body {
       cursor: pointer;
     }
 
-    #downloadButtonn:hover {
+    .testButton:hover {
       background: #45a049;
     }
 
-    #downloadButton:disabled {
+    .downloadButton:disabled {
         background: #999999;
     }
 
@@ -126,4 +126,24 @@ body {
         dominant-baseline: middle;
         transform: rotate(-135deg); /* cancel parent SVG rotation */
         transform-origin: center;
+    }
+
+    #scale-button {
+        margin-top: 2rem;
+    }
+
+    .updateButton {
+      width: 200px;
+      padding: 10px;
+      margin: 0rem;
+      background: #666;
+      border: none;
+      color: white;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .updateButton:hover {
+      background: #777;
     }
