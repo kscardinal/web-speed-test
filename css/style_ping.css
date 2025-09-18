@@ -29,7 +29,7 @@ body {
       color: #FFF;
    }
 
-    .body-container button {
+    #pingButton {
       width: 200px;
       padding: 10px;
       margin: 0rem;
@@ -41,33 +41,33 @@ body {
       cursor: pointer;
     }
 
-    .body-container button:hover {
+     #pingButton:hover {
       background: #45a049;
     }
 
-    .body-container button:disabled {
+     #pingButton:disabled {
         background: #999999;
     }
 
-  svg {
+  #pingSVG {
     transform: rotate(135deg); /* Align left end at 225° */
     margin: 0rem;
   }
 
-  circle {
+  .ping circle {
     fill: none;
     stroke-width: 20;
     stroke-linecap: round; /* Rounded ends */
     margin: 0rem;
   }
 
-  .background {
+  #pingBackground {
     stroke: #666; /* Gray arc */
     stroke-dasharray: 318; /* 270° portion */
     stroke-dashoffset: 0;   /* Full gray arc */
   }
 
-  .progress {
+  #pingProgress {
     stroke: #4CAF50; /* Green fill */
     stroke-dasharray: 0 424;
     stroke-dashoffset: 0; /* Start empty */

@@ -4,21 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sonnaz Group | Speedtest</title>
-  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/style_ping.css">
 </head>
 <body>
     <div class="body-container">
-        <h2 id="ping-box-title">Speed Test</h2>
+        <h2 id="ping-box-title">Ping</h2>
         
-        <svg width="300" height="300" viewBox="0 0 200 200">
-            <circle class="background" cx="100" cy="100" r="67.5"/>
-            <circle class="progress" cx="100" cy="100" r="67.5"/>
+        <svg width="300" height="300" viewBox="0 0 200 200" class="ping" id="pingSVG">
+            <circle id="pingBackground" cx="100" cy="100" r="67.5"/>
+            <circle id="pingProgress" cx="100" cy="100" r="67.5"/>
             <text x="100" y="100" id="ping-text"></text>
             <text x="100" y="125" id="ping-ms-text">average</text>
             <text x="100" y="70" id="ping-average-text"></text>
         </svg>
 
-        <button id="ping-test-button">Test Ping</button>
+        <button id="pingButton">Test Ping</button>
     </div>
 </body>
 <script>
@@ -59,7 +59,6 @@
             await fetch(host, { method: 'HEAD', cache: 'no-cache' });
             const end = performance.now();
             const time = end - start;
-            // console.log(`Ping ${i + 1}: ${time.toFixed(2)} ms`);
             total += time;
         }
         const avg = total / count;
@@ -68,11 +67,11 @@
 
     const titleText = document.getElementById('ping-box-title');
     const pingText = document.getElementById('ping-text');
-    const pingButton = document.getElementById('ping-test-button');
+    const pingButton = document.getElementById('pingButton');
     const pingUnitText = document.getElementById('ping-ms-text');
     const pingAverageText = document.getElementById('ping-average-text');
-    const progress = document.querySelector('.progress');
-    const progressBar = document.querySelector('svg');   
+    const progress = document.getElementById('pingProgress');
+    const progressBar = document.getElementById('pingSVG');   
 
     let isTesting = false; // Global Variable
 

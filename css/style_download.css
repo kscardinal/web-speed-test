@@ -29,7 +29,7 @@ body {
       color: #FFF;
    }
 
-    .body-container button .download {
+    #downloadButton {
       width: 200px;
       padding: 10px;
       margin: 0rem;
@@ -41,33 +41,33 @@ body {
       cursor: pointer;
     }
 
-    .body-container button:hover .download {
+    #downloadButtonn:hover {
       background: #45a049;
     }
 
-    .body-container button:disabled .download {
+    #downloadButton:disabled {
         background: #999999;
     }
 
-  svg .download{
+  #downloadSVG {
     transform: rotate(135deg); /* Align left end at 225° */
     margin: 0rem;
   }
 
-  circle .download {
+  .download circle {
     fill: none;
     stroke-width: 20;
     stroke-linecap: round; /* Rounded ends */
     margin: 0rem;
   }
 
-  .background .download {
+  #downloadBackground  {
     stroke: #666; /* Gray arc */
     stroke-dasharray: 318; /* 270° portion */
     stroke-dashoffset: 0;   /* Full gray arc */
   }
 
-  .progress .download {
+  #downloadProgress {
     stroke: #4CAF50; /* Green fill */
     stroke-dasharray: 0 424;
     stroke-dashoffset: 0; /* Start empty */

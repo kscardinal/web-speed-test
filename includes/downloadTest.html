@@ -4,21 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sonnaz Group | Speedtest</title>
-  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/style_download.css">
 </head>
 <body>
     <div class="body-container">
-        <h2 id="test-box-title">Speed Test</h2>
+        <h2 id="test-box-title">Download</h2>
         
-        <svg width="300" height="300" viewBox="0 0 200 200">
-            <circle class="background" cx="100" cy="100" r="67.5"/>
-            <circle class="progress" cx="100" cy="100" r="67.5"/>
+        <svg width="300" height="300" viewBox="0 0 200 200" id="downloadSVG" class="download">
+            <circle id="downloadBackground" cx="100" cy="100" r="67.5"/>
+            <circle id="downloadProgress" cx="100" cy="100" r="67.5"/>
             <text x="100" y="100" id="test-text"></text>
             <text x="100" y="125" id="test-unit-text">Mbps</text>
             <text x="100" y="70" id="test-average-text"></text>
         </svg>
 
-        <button id="test-button">Test Download</button>
+        <button id="downloadButton">Test Download</button>
     </div>
 </body>
 <script>
@@ -51,11 +51,11 @@
 
     const titleText = document.getElementById('test-box-title');
     const resultText = document.getElementById('test-text');
-    const testButton = document.getElementById('test-button');
+    const testButton = document.getElementById('downloadButton');
     const testUnitText = document.getElementById('test-unit-text');
     const testAverageText = document.getElementById('test-average-text');
-    const progress = document.querySelector('.progress');
-    const progressBar = document.querySelector('svg');   
+    const progress = document.getElementById('downloadProgress');
+    const progressBar = document.getElementById('downloadSVG');   
 
     let isTesting = false; // Global Variable
 
