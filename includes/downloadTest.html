@@ -16,6 +16,8 @@
             <text x="100" y="100" id="test-text"></text>
             <text x="100" y="125" id="test-unit-text">Mbps</text>
             <text x="100" y="70" id="test-average-text"></text>
+            <text x="25" y="150" class="min-max-label">0</text>
+            <text x="177" y="150" class="min-max-label">300</text>
         </svg>
 
         <button id="downloadButton">Test Download</button>
@@ -124,6 +126,7 @@ downloadTestButton.addEventListener('click', async () => {
     downloadTestUnitText.textContent = "Mbps";
     downloadTestAverageText.textContent = "";
     downloadResultText.textContent = "0";
+    downloadTestButton.style.background = "#FF4444";
 
     downloadProgress.style.strokeDasharray = "0 424"; // reset progress
 
@@ -139,17 +142,29 @@ downloadTestButton.addEventListener('click', async () => {
             const fullArc = 2 * Math.PI * radius * 0.75;
             const remaining = 2 * Math.PI * radius - fullArc * (speedToPercent(speedMbps, topSpeed) / 100);
             downloadProgress.style.strokeDasharray = `${fullArc * (speedToPercent(speedMbps, topSpeed) / 100)} ${remaining}`;
+            downloadResultText.style.fill = getGradientColor(speedToPercent(speedMbps, topSpeed));
         });
 
+        // Pu the average up when the test is done
+        const numSpeeds = speeds.length;
+        const speedsSum = speeds.reduce((accumulator, current) => accumulator + current, 0);
+        const averageSpeed = speedsSum / numSpeeds;
+
+        downloadTestAverageText.textContent = "average";
+        downloadResultText.textContent = averageSpeed.toFixed(0);
+        downloadProgress.style.stroke = getGradientColor(speedToPercent(averageSpeed, topSpeed));
+        downloadResultText.style.fill = getGradientColor(speedToPercent(averageSpeed, topSpeed));
+
+        // Reset the button
+        downloadTestButton.textContent = "Test Download";
+        downloadTestButton.style.background = "#45a049";
+
+        // Cancel button logic
         if (downloadIsTesting) {
 
-            const numSpeeds = speeds.length;
-            const speedsSum = speeds.reduce((accumulator, current) => accumulator + current, 0);
-            const averageSpeed = speedsSum / numSpeeds;
-
-            downloadTestAverageText.textContent = "average";
-            downloadResultText.textContent = averageSpeed.toFixed(0);
-            downloadProgress.style.stroke = getGradientColor(speedToPercent(averageSpeed, topSpeed));
+        } else {
+            // If the cancel button is pressed
+            
         }
 
     } catch (err) {
