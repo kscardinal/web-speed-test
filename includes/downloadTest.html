@@ -202,16 +202,13 @@ downloadTestButton.addEventListener('click', async () => {
         } else {
             topSpeed = 100;
         }
+        
+        const remaining = 2 * Math.PI * radius - fullArc * (speedToPercent(averageSpeed, topSpeed) / 100);
+        document.getElementById('downloadProgress').style.strokeDasharray = `${fullArc * (speedToPercent(averageSpeed, topSpeed) / 100)} ${remaining}`;
         document.getElementById('max-label').textContent = topSpeed;
-
-
-        if (averageSpeed === 0) {
-            const remaining = 2 * Math.PI * radius - fullArc * (speedToPercent(speed, topSpeed) / 100);
-            document.getElementById('downloadProgress').style.strokeDasharray = `${fullArc * (speedToPercent(speed, topSpeed) / 100)} ${remaining}`;
-        } else {
-            const remaining = 2 * Math.PI * radius - fullArc * (speedToPercent(averageSpeed, topSpeed) / 100);
-            document.getElementById('downloadProgress').style.strokeDasharray = `${fullArc * (speedToPercent(averageSpeed, topSpeed) / 100)} ${remaining}`;
-        }
+        document.getElementById('downloadProgress').style.stroke = getGradientColor(speedToPercent(averageSpeed, topSpeed));
+        document.getElementById('test-text').style.fill = getGradientColor(speedToPercent(averageSpeed, topSpeed));
+        
     });
 
 </script>
