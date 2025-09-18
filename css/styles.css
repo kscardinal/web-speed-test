@@ -47,11 +47,6 @@ body {
         background: #999999;
     }
 
-    #ping-box-title {
-        margin: 0rem;
-        font-size: 2.5rem;
-    }
-
   svg {
     transform: rotate(135deg); /* Align left end at 225° */
     margin: 0rem;
@@ -74,6 +69,13 @@ body {
     stroke: #4CAF50; /* Green fill */
     stroke-dasharray: 0 424;
     stroke-dashoffset: 0; /* Start empty */
+  }
+
+  /* PING TESTING PAGE */
+
+  #ping-box-title {
+    margin: 0rem;
+    font-size: 2.5rem;
   }
 
   #ping-text {
@@ -101,6 +103,49 @@ body {
     }
 
     #ping-average-text {
+        fill: #FFF;
+        opacity: 60%;
+        font-size: 1rem;
+        font-weight: bold;
+        margin: 0rem;
+        text-anchor: middle;
+        dominant-baseline: middle;
+        transform: rotate(-135deg); /* cancel parent SVG rotation */
+        transform-origin: center;
+    }
+
+    /* DOWNLOAD TESTING PAGE */
+
+  #test-box-title {
+    margin: 0rem;
+    font-size: 2.5rem;
+  }
+
+  #test-text {
+    font-size: 2.5rem;
+    font-weight: bold;
+    fill: #FFF;
+    margin: 0rem;
+    text-anchor: middle;
+    dominant-baseline: middle;
+    transform: rotate(-135deg); /* cancel parent SVG rotation */
+    transform-origin: center;
+  }
+
+  #test-unit-text {
+        fill: #FFF;
+        opacity: 60%;
+        font-size: 1rem;
+        font-weight: bold;
+        margin: 0rem;
+        display: none;
+         text-anchor: middle;
+        dominant-baseline: middle;
+        transform: rotate(-135deg); /* cancel parent SVG rotation */
+        transform-origin: center;
+    }
+
+    #test-average-text {
         fill: #FFF;
         opacity: 60%;
         font-size: 1rem;

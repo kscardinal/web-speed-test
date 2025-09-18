@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sonnaz Group | Speedtest</title>
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <div class="body-container">
+        <h2 id="test-box-title">Speed Test</h2>
+        
+        <svg width="300" height="300" viewBox="0 0 200 200">
+            <circle class="background" cx="100" cy="100" r="67.5"/>
+            <circle class="progress" cx="100" cy="100" r="67.5"/>
+            <text x="100" y="100" id="test-text"></text>
+            <text x="100" y="125" id="test-unit-text">average</text>
+            <text x="100" y="70" id="test-average-text"></text>
+        </svg>
+
+        <button id="test-button">Test Download</button>
+    </div>
+</body>
+<script>
+    // Download Files
+    const HMBFile = 'http://162.243.22.90/100MB.bin';
+    const OGBFile = 'http://162.243.22.90/1GB.bin';
+    const TGBFile = 'http://162.243.22.90/10GB.bin'; 
+
+
+    function getGradientColor(percent) {
+        let r, g, b = 0;
+
+        if (percent <= 50) {
+            // Red to Yellow-ish
+            r = 255;
+            g = Math.round(220 * (percent / 50));  // max green 220 instead of 255
+        } else {
+            // Yellow-ish to Darker Green
+            g = 180 + Math.round(40 * ((100 - percent) / 50)); // g goes 220->180
+            r = Math.round(255 * ((100 - percent) / 50));       // r goes 255->0
+        }
+
+        return `rgb(${r},${g},${b})`;
+    }
+
+    const titleText = document.getElementById('test-box-title');
+    const resultText = document.getElementById('test-text');
+    const testButton = document.getElementById('test-button');
+    const testUnitText = document.getElementById('test-unit-text');
+    const testAverageText = document.getElementById('test-average-text');
+    const progress = document.querySelector('.progress');
+    const progressBar = document.querySelector('svg');   
+
+    let isTesting = false; // Global Variable
+
+    testButton.addEventListener('click', async () => {
+
+        console.log("Testing download speed ...");
+       
+        try {
+
+            const startTime = performance.now();
+
+            const response = await fetch(testFile, { cache: "no-store" });
+            const reader = response.body.getReader();
+
+            let received = 0;
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                received += value.length;
+            }
+
+            const endTime = performance.now();
+            const duration = (endTime - startTime) / 1000; // seconds
+
+            const bits = received * 8;
+            const mbps = (bits / duration) / (1024 * 1024);
+
+            console.log(`Download Speed: ${mbps.toFixed(2)} Mbps`);
+
+        } catch (err) {
+            console.error("Download test failed:", err);
+        }
+
+    });
+
+    
+
+</script>
+</html>

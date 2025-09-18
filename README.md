@@ -55,3 +55,53 @@ http://localhost:8000/pingTest.php
 ```
 
 ---
+
+## Server Setup
+
+1. Connect to server using SHH
+
+2. Install docker
+
+3. Set up speedtest folder
+``` bash
+mkdir ~/speedtest
+```
+
+4. Add `default.conf` inside speedtest folder
+```bash
+cd ~/speedtest
+vi default.conf
+```
+- or -
+```bash
+cd ~/speedtest
+nano default.conf
+```
+5. Add CORS to `default.conf`
+``` nginx
+server {
+    listen 80;
+    server_name _;
+
+    location / {
+        root /usr/share/nginx/html;
+        autoindex on;
+        add_header Access-Control-Allow-Origin *;
+    }
+}
+```
+6. Run docker container
+```bash
+docker run --name nginx-speedtest -p 80:80 \
+  -v ~/speedtest:/usr/share/nginx/html:ro \
+  -v ~/speedtest/default.conf:/etc/nginx/conf.d/default.conf:ro \
+  -d nginx
+```
+
+7. Test in browser
+``` txt
+http://<your-server-ip>/10MB.bin
+```
+
+
+---
