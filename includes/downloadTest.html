@@ -22,10 +22,15 @@
     </div>
 </body>
 <script>
+
     // Download Files
-    const HMBFile = 'http://162.243.22.90/100MB.bin';
-    const OGBFile = 'http://162.243.22.90/1GB.bin';
-    const TGBFile = 'http://162.243.22.90/10GB.bin'; 
+    const fileSize_10MB = 'http://162.243.22.90/10MB.bin';
+    const fileSize_100MB = 'http://162.243.22.90/100MB.bin';
+    const fileSize_250MB = 'http://162.243.22.90/250MB.bin';
+    const fileSize_500MB = 'http://162.243.22.90/500MB.bin';
+    const fileSize_1GB = 'http://162.243.22.90/1GB.bin';
+
+    const topSpeed = 300;
 
 
     function getGradientColor(percent) {
@@ -54,7 +59,7 @@
 
     let isTesting = false; // Global Variable
 
-    function getGradientColor(percent) {
+function getGradientColor(percent) {
     let r, g, b = 0;
     if (percent <= 50) {
         r = 255;
@@ -64,6 +69,16 @@
         r = Math.round(255 * ((100 - percent) / 50));
     }
     return `rgb(${r},${g},${b})`;
+}
+
+function speedToPercent(currentSpeed, topSpeed) {
+    if (currentSpeed >= topSpeed) {
+        return 100;
+    } else if (currentSpeed <= 0) {
+        return 0;
+    } else {
+        return ((currentSpeed / topSpeed) * 100);
+    }
 }
 
 async function testDownloadSpeed(url, onProgress) {
@@ -112,21 +127,29 @@ testButton.addEventListener('click', async () => {
 
     progress.style.strokeDasharray = "0 424"; // reset progress
 
+    const speeds = [];
+
     try {
-        const avg = await testDownloadSpeed(HMBFile, ({ speedMbps, percent }) => {
+        const avg = await testDownloadSpeed(fileSize_100MB, ({ speedMbps, percent }) => {
             resultText.textContent = speedMbps.toFixed(0);
-            progress.style.stroke = getGradientColor(Math.min(speedMbps, 100));
+            progress.style.stroke = getGradientColor(speedToPercent(speedMbps, topSpeed));
+            speeds.push(speedMbps);
             
             const radius = 67.5;
             const fullArc = 2 * Math.PI * radius * 0.75;
-            const remaining = 2 * Math.PI * radius - fullArc * (percent / 100);
-            progress.style.strokeDasharray = `${fullArc * (percent / 100)} ${remaining}`;
+            const remaining = 2 * Math.PI * radius - fullArc * (speedToPercent(speedMbps, topSpeed) / 100);
+            progress.style.strokeDasharray = `${fullArc * (speedToPercent(speedMbps, topSpeed) / 100)} ${remaining}`;
         });
 
         if (isTesting) {
+
+            const numSpeeds = speeds.length;
+            const speedsSum = speeds.reduce((accumulator, current) => accumulator + current, 0);
+            const averageSpeed = speedsSum / numSpeeds;
+
             testAverageText.textContent = "average";
-            resultText.textContent = avg.toFixed(0);
-            progress.style.stroke = getGradientColor(Math.min(avg, 100));
+            resultText.textContent = averageSpeed.toFixed(0);
+            progress.style.stroke = getGradientColor(speedToPercent(averageSpeed, topSpeed));
         }
 
     } catch (err) {
