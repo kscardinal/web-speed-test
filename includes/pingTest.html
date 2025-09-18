@@ -118,10 +118,14 @@
 
             // If it was cancelled, just stop here
             if (!isTesting) {
-                progress.style.strokeDasharray = "0 424";
                 progress.style.stroke = "#4CAF50";
-                pingText.textContent = "";
-                pingUnitText.textContent = "";
+
+                const pingAverage = pingTimes.reduce((accumulator, current) => accumulator + current, 0) / pingTimes.length;
+
+                pingText.textContent = (`${pingAverage.toFixed(0)}`);
+                pingAverageText.textContent = "average";
+                pingText.style.fill = getGradientColor(pingToScore(pingAverage));
+                progress.style.stroke = getGradientColor(pingToScore(pingAverage));
                 return;
             };
 
