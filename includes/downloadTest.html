@@ -49,15 +49,15 @@
         return `rgb(${r},${g},${b})`;
     }
 
-    const titleText = document.getElementById('test-box-title');
-    const resultText = document.getElementById('test-text');
-    const testButton = document.getElementById('downloadButton');
-    const testUnitText = document.getElementById('test-unit-text');
-    const testAverageText = document.getElementById('test-average-text');
-    const progress = document.getElementById('downloadProgress');
-    const progressBar = document.getElementById('downloadSVG');   
+    const downloadTitleText = document.getElementById('test-box-title');
+    const downloadResultText = document.getElementById('test-text');
+    const downloadTestButton = document.getElementById('downloadButton');
+    const downloadTestUnitText = document.getElementById('test-unit-text');
+    const downloadTestAverageText = document.getElementById('test-average-text');
+    const downloadProgress = document.getElementById('downloadProgress');
+    const downloadProgressBar = document.getElementById('downloadSVG');   
 
-    let isTesting = false; // Global Variable
+    let downloadIsTesting = false; // Global Variable
 
 function getGradientColor(percent) {
     let r, g, b = 0;
@@ -92,7 +92,7 @@ async function testDownloadSpeed(url, onProgress) {
     const totalBytes = contentLength ? parseInt(contentLength) : 0;
 
     while (true) {
-        if (!isTesting) break; // allow cancel
+        if (!downloadIsTesting) break; // allow cancel
 
         const { done, value } = await reader.read();
         if (done) break;
@@ -110,55 +110,55 @@ async function testDownloadSpeed(url, onProgress) {
     return averageMbps;
 }
 
-testButton.addEventListener('click', async () => {
-    if (isTesting) {
+downloadTestButton.addEventListener('click', async () => {
+    if (downloadIsTesting) {
         // cancel
-        isTesting = false;
-        testButton.textContent = "Test Download";
+        downloadIsTesting = false;
+        downloadTestButton.textContent = "Test Download";
         return;
     }
 
-    isTesting = true;
-    testButton.textContent = "Cancel";
-    testUnitText.style.display = "inline";
-    testUnitText.textContent = "Mbps";
-    testAverageText.textContent = "";
-    resultText.textContent = "0";
+    downloadIsTesting = true;
+    downloadTestButton.textContent = "Cancel";
+    downloadTestUnitText.style.display = "inline";
+    downloadTestUnitText.textContent = "Mbps";
+    downloadTestAverageText.textContent = "";
+    downloadResultText.textContent = "0";
 
-    progress.style.strokeDasharray = "0 424"; // reset progress
+    downloadProgress.style.strokeDasharray = "0 424"; // reset progress
 
     const speeds = [];
 
     try {
         const avg = await testDownloadSpeed(fileSize_100MB, ({ speedMbps, percent }) => {
-            resultText.textContent = speedMbps.toFixed(0);
-            progress.style.stroke = getGradientColor(speedToPercent(speedMbps, topSpeed));
+            downloadResultText.textContent = speedMbps.toFixed(0);
+            downloadProgress.style.stroke = getGradientColor(speedToPercent(speedMbps, topSpeed));
             speeds.push(speedMbps);
             
             const radius = 67.5;
             const fullArc = 2 * Math.PI * radius * 0.75;
             const remaining = 2 * Math.PI * radius - fullArc * (speedToPercent(speedMbps, topSpeed) / 100);
-            progress.style.strokeDasharray = `${fullArc * (speedToPercent(speedMbps, topSpeed) / 100)} ${remaining}`;
+            downloadProgress.style.strokeDasharray = `${fullArc * (speedToPercent(speedMbps, topSpeed) / 100)} ${remaining}`;
         });
 
-        if (isTesting) {
+        if (downloadIsTesting) {
 
             const numSpeeds = speeds.length;
             const speedsSum = speeds.reduce((accumulator, current) => accumulator + current, 0);
             const averageSpeed = speedsSum / numSpeeds;
 
-            testAverageText.textContent = "average";
-            resultText.textContent = averageSpeed.toFixed(0);
-            progress.style.stroke = getGradientColor(speedToPercent(averageSpeed, topSpeed));
+            downloadTestAverageText.textContent = "average";
+            downloadResultText.textContent = averageSpeed.toFixed(0);
+            downloadProgress.style.stroke = getGradientColor(speedToPercent(averageSpeed, topSpeed));
         }
 
     } catch (err) {
         console.error("Download test failed:", err);
-        resultText.textContent = "Error";
+        downloadResultText.textContent = "Error";
     }
 
-    isTesting = false;
-    testButton.textContent = "Test Download";
+    downloadIsTesting = false;
+    downloadTestButton.textContent = "Test Download";
 
     });
 
