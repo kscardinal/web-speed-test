@@ -34,6 +34,8 @@
     const fileSize_1GB = 'http://162.243.22.90/1GB.bin';
 
     let topSpeed = 500;
+    let averageSpeed = 0;
+    let speed = 0;
 
 
     function getGradientColor(percent) {
@@ -62,6 +64,9 @@
     const scaleButton = document.getElementById('scale-button');
 
     let downloadIsTesting = false; // Global Variable
+
+    const radius = 67.5;
+    const fullArc = 2 * Math.PI * radius * 0.75;
 
 function getGradientColor(percent) {
     let r, g, b = 0;
@@ -145,12 +150,13 @@ downloadTestButton.addEventListener('click', async () => {
             const remaining = 2 * Math.PI * radius - fullArc * (speedToPercent(speedMbps, topSpeed) / 100);
             downloadProgress.style.strokeDasharray = `${fullArc * (speedToPercent(speedMbps, topSpeed) / 100)} ${remaining}`;
             downloadResultText.style.fill = getGradientColor(speedToPercent(speedMbps, topSpeed));
+            speed = speedMbps;
         });
 
-        // Pu the average up when the test is done
+        // Put the average up when the test is done
         const numSpeeds = speeds.length;
         const speedsSum = speeds.reduce((accumulator, current) => accumulator + current, 0);
-        const averageSpeed = speedsSum / numSpeeds;
+        averageSpeed = speedsSum / numSpeeds;
 
         downloadTestAverageText.textContent = "average";
         downloadResultText.textContent = averageSpeed.toFixed(0);
@@ -197,6 +203,15 @@ downloadTestButton.addEventListener('click', async () => {
             topSpeed = 100;
         }
         document.getElementById('max-label').textContent = topSpeed;
+
+
+        if (averageSpeed === 0) {
+            const remaining = 2 * Math.PI * radius - fullArc * (speedToPercent(speed, topSpeed) / 100);
+            document.getElementById('downloadProgress').style.strokeDasharray = `${fullArc * (speedToPercent(speed, topSpeed) / 100)} ${remaining}`;
+        } else {
+            const remaining = 2 * Math.PI * radius - fullArc * (speedToPercent(averageSpeed, topSpeed) / 100);
+            document.getElementById('downloadProgress').style.strokeDasharray = `${fullArc * (speedToPercent(averageSpeed, topSpeed) / 100)} ${remaining}`;
+        }
     });
 
 </script>
