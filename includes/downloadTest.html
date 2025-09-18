@@ -14,7 +14,7 @@
             <circle class="background" cx="100" cy="100" r="67.5"/>
             <circle class="progress" cx="100" cy="100" r="67.5"/>
             <text x="100" y="100" id="test-text"></text>
-            <text x="100" y="125" id="test-unit-text">average</text>
+            <text x="100" y="125" id="test-unit-text">Mbps</text>
             <text x="100" y="70" id="test-average-text"></text>
         </svg>
 
@@ -54,35 +54,88 @@
 
     let isTesting = false; // Global Variable
 
-    testButton.addEventListener('click', async () => {
+    function getGradientColor(percent) {
+    let r, g, b = 0;
+    if (percent <= 50) {
+        r = 255;
+        g = Math.round(220 * (percent / 50));
+    } else {
+        g = 180 + Math.round(40 * ((100 - percent) / 50));
+        r = Math.round(255 * ((100 - percent) / 50));
+    }
+    return `rgb(${r},${g},${b})`;
+}
 
-        console.log("Testing download speed ...");
-       
-        try {
+async function testDownloadSpeed(url, onProgress) {
+    const startTime = performance.now();
+    let loadedBytes = 0;
 
-            const startTime = performance.now();
+    const response = await fetch(url);
+    const reader = response.body.getReader();
 
-            const response = await fetch(testFile, { cache: "no-store" });
-            const reader = response.body.getReader();
+    const contentLength = response.headers.get("Content-Length");
+    const totalBytes = contentLength ? parseInt(contentLength) : 0;
 
-            let received = 0;
-            while (true) {
-                const { done, value } = await reader.read();
-                if (done) break;
-                received += value.length;
-            }
+    while (true) {
+        if (!isTesting) break; // allow cancel
 
-            const endTime = performance.now();
-            const duration = (endTime - startTime) / 1000; // seconds
+        const { done, value } = await reader.read();
+        if (done) break;
 
-            const bits = received * 8;
-            const mbps = (bits / duration) / (1024 * 1024);
+        loadedBytes += value.length;
+        const elapsed = (performance.now() - startTime) / 1000; // seconds
+        const speedMbps = (loadedBytes * 8) / (elapsed * 1000 * 1000);
+        const percent = totalBytes ? (loadedBytes / totalBytes) * 100 : 0;
 
-            console.log(`Download Speed: ${mbps.toFixed(2)} Mbps`);
+        onProgress({ speedMbps, percent });
+    }
 
-        } catch (err) {
-            console.error("Download test failed:", err);
+    const totalElapsed = (performance.now() - startTime) / 1000;
+    const averageMbps = (loadedBytes * 8) / (totalElapsed * 1000 * 1000);
+    return averageMbps;
+}
+
+testButton.addEventListener('click', async () => {
+    if (isTesting) {
+        // cancel
+        isTesting = false;
+        testButton.textContent = "Test Download";
+        return;
+    }
+
+    isTesting = true;
+    testButton.textContent = "Cancel";
+    testUnitText.style.display = "inline";
+    testUnitText.textContent = "Mbps";
+    testAverageText.textContent = "";
+    resultText.textContent = "0";
+
+    progress.style.strokeDasharray = "0 424"; // reset progress
+
+    try {
+        const avg = await testDownloadSpeed(HMBFile, ({ speedMbps, percent }) => {
+            resultText.textContent = speedMbps.toFixed(0);
+            progress.style.stroke = getGradientColor(Math.min(speedMbps, 100));
+            
+            const radius = 67.5;
+            const fullArc = 2 * Math.PI * radius * 0.75;
+            const remaining = 2 * Math.PI * radius - fullArc * (percent / 100);
+            progress.style.strokeDasharray = `${fullArc * (percent / 100)} ${remaining}`;
+        });
+
+        if (isTesting) {
+            testAverageText.textContent = "average";
+            resultText.textContent = avg.toFixed(0);
+            progress.style.stroke = getGradientColor(Math.min(avg, 100));
         }
+
+    } catch (err) {
+        console.error("Download test failed:", err);
+        resultText.textContent = "Error";
+    }
+
+    isTesting = false;
+    testButton.textContent = "Test Download";
 
     });
 
