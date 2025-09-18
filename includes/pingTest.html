@@ -16,6 +16,7 @@
             <text x="100" y="100" id="ping-text"></text>
             <text x="100" y="125" id="ping-ms-text">average</text>
             <text x="100" y="70" id="ping-average-text"></text>
+            <text x="100" y="175" id="jitter-text"></text>
         </svg>
 
         <button id="pingButton">Test Ping</button>
@@ -72,6 +73,7 @@
     const pingAverageText = document.getElementById('ping-average-text');
     const progress = document.getElementById('pingProgress');
     const progressBar = document.getElementById('pingSVG');   
+    const jitterText = document.getElementById('jitter-text');
 
     let isTesting = false; // Global Variable
 
@@ -91,6 +93,7 @@
         pingButton.style.background = "#FF4444";
         pingUnitText.textContent = "ms";
         pingAverageText.textContent = "";
+        jitterText.textContent = '';
 
         // Timing Variables
         const pingTimes = [];
@@ -126,6 +129,8 @@
                 pingAverageText.textContent = "average";
                 pingText.style.fill = getGradientColor(pingToScore(pingAverage));
                 progress.style.stroke = getGradientColor(pingToScore(pingAverage));
+                const jitter = calculateJitter(pingTimes);
+                jitterText.textContent = `Jitter: ${jitter.toFixed(2)} ms`;
                 return;
             };
 
@@ -144,6 +149,8 @@
                 pingText.style.fill = getGradientColor(pingToScore(pingAverage));
                 progress.style.stroke = getGradientColor(pingToScore(pingAverage));
                 pingAverageText.textContent = "average";
+                const jitter = calculateJitter(pingTimes);
+                jitterText.textContent = `Jitter: ${jitter.toFixed(2)} ms`;
             }
 
         }
@@ -165,6 +172,17 @@
         }
        
     });
+
+    function calculateJitter(pingTimes) {
+        if (pingTimes.length < 2) return 0;
+
+        let totalDiff = 0;
+        for (let i = 1; i < pingTimes.length; i++) {
+            totalDiff += Math.abs(pingTimes[i] - pingTimes[i - 1]);
+        }
+        return totalDiff / (pingTimes.length - 1);
+    }
+
 
     
 

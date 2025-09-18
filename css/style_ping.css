@@ -115,3 +115,15 @@ body {
         transform: rotate(-135deg); /* cancel parent SVG rotation */
         transform-origin: center;
     }
+
+    #jitter-text {
+      fill: #FFF;
+        opacity: 60%;
+        font-size: 0.75rem;
+        font-weight: bold;
+        margin: 0rem;
+        text-anchor: middle;
+        dominant-baseline: middle;
+        transform: rotate(-135deg); /* cancel parent SVG rotation */
+        transform-origin: center;
+    }
