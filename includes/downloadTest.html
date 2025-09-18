@@ -17,7 +17,7 @@
             <text x="100" y="125" id="test-unit-text">Mbps</text>
             <text x="100" y="70" id="test-average-text"></text>
             <text x="25" y="150" class="min-max-label">0</text>
-            <text x="177" y="150" class="min-max-label">300</text>
+            <text x="177" y="150" class="min-max-label" id="max-label"></text>
         </svg>
 
         <button id="downloadButton">Test Download</button>
@@ -32,7 +32,7 @@
     const fileSize_500MB = 'http://162.243.22.90/500MB.bin';
     const fileSize_1GB = 'http://162.243.22.90/1GB.bin';
 
-    const topSpeed = 300;
+    const topSpeed = 500;
 
 
     function getGradientColor(percent) {
@@ -175,6 +175,12 @@ downloadTestButton.addEventListener('click', async () => {
     downloadIsTesting = false;
     downloadTestButton.textContent = "Test Download";
 
+    });
+
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const maxLabel = document.getElementById('max-label');
+        maxLabel.textContent = topSpeed;
     });
 
     
