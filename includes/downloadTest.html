@@ -208,6 +208,10 @@ downloadTestButton.addEventListener('click', async () => {
         document.getElementById('max-label').textContent = topSpeed;
         document.getElementById('downloadProgress').style.stroke = getGradientColor(speedToPercent(averageSpeed, topSpeed));
         document.getElementById('test-text').style.fill = getGradientColor(speedToPercent(averageSpeed, topSpeed));
+
+        if (speed === 0 && averageSpeed === 0) {
+            document.getElementById('downloadProgress').style.stroke = "#4CAF50";
+        }
         
     });
 
