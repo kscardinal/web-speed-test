@@ -1,190 +1,195 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sonnaz Group | Speedtest</title>
-  <link rel="stylesheet" href="../css/style_ping.css">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sonnaz Group | Speedtest</title>
+    <link rel="stylesheet" href="../css/style_ping.css" />
+  </head>
+  <body>
     <div class="body-container">
-        <h2 id="ping-box-title">Ping</h2>
-        
-        <svg width="300" height="300" viewBox="0 0 200 200" class="ping" id="pingSVG">
-            <circle id="pingBackground" cx="100" cy="100" r="67.5"/>
-            <circle id="pingProgress" cx="100" cy="100" r="67.5"/>
-            <text x="100" y="100" id="ping-text"></text>
-            <text x="100" y="125" id="ping-ms-text">average</text>
-            <text x="100" y="70" id="ping-average-text"></text>
-            <text x="100" y="175" id="jitter-text"></text>
-        </svg>
+      <h2 id="ping-box-title">Ping</h2>
 
-        <button id="pingButton">Test Ping</button>
+      <svg
+        width="300"
+        height="300"
+        viewBox="0 0 200 200"
+        class="ping"
+        id="pingSVG"
+      >
+        <circle id="pingBackground" cx="100" cy="100" r="67.5" />
+        <circle id="pingProgress" cx="100" cy="100" r="67.5" />
+        <text x="100" y="100" id="ping-text"></text>
+        <text x="100" y="125" id="ping-ms-text">average</text>
+        <text x="100" y="70" id="ping-average-text"></text>
+        <text x="100" y="175" id="jitter-text"></text>
+      </svg>
+
+      <button id="pingButton">Test Ping</button>
     </div>
-</body>
-<script>
+  </body>
+  <script>
     // Supported Website
-    const host = 'https://api.github.com'; 
+    const host = "https://api.github.com";
 
     function getGradientColor(percent) {
-        let r, g, b = 0;
+      let r,
+        g,
+        b = 0;
 
-        if (percent <= 50) {
-            // Red to Yellow-ish
-            r = 255;
-            g = Math.round(220 * (percent / 50));  // max green 220 instead of 255
-        } else {
-            // Yellow-ish to Darker Green
-            g = 180 + Math.round(40 * ((100 - percent) / 50)); // g goes 220->180
-            r = Math.round(255 * ((100 - percent) / 50));       // r goes 255->0
-        }
+      if (percent <= 50) {
+        // Red to Yellow-ish
+        r = 255;
+        g = Math.round(220 * (percent / 50)); // max green 220 instead of 255
+      } else {
+        // Yellow-ish to Darker Green
+        g = 180 + Math.round(40 * ((100 - percent) / 50)); // g goes 220->180
+        r = Math.round(255 * ((100 - percent) / 50)); // r goes 255->0
+      }
 
-        return `rgb(${r},${g},${b})`;
+      return `rgb(${r},${g},${b})`;
     }
 
     function pingToScore(ping) {
-        let score = 100 - ping + 15;
+      let score = 100 - ping + 15;
 
-        // Clamp score between 0 and 100
-        if (score < 0) score = 0;
-        if (score > 100) score = 100;
+      // Clamp score between 0 and 100
+      if (score < 0) score = 0;
+      if (score > 100) score = 100;
 
-        return score;
+      return score;
     }
-
 
     async function pingHost(host, count = 1) {
-        let total = 0;
-        for (let i = 0; i < count; i++) {
-            const start = performance.now();
-            await fetch(host, { method: 'HEAD', cache: 'no-cache' });
-            const end = performance.now();
-            const time = end - start;
-            total += time;
-        }
-        const avg = total / count;
-        return avg;
+      let total = 0;
+      for (let i = 0; i < count; i++) {
+        const start = performance.now();
+        await fetch(host, { method: "HEAD", cache: "no-cache" });
+        const end = performance.now();
+        const time = end - start;
+        total += time;
+      }
+      const avg = total / count;
+      return avg;
     }
 
-    const titleText = document.getElementById('ping-box-title');
-    const pingText = document.getElementById('ping-text');
-    const pingButton = document.getElementById('pingButton');
-    const pingUnitText = document.getElementById('ping-ms-text');
-    const pingAverageText = document.getElementById('ping-average-text');
-    const progress = document.getElementById('pingProgress');
-    const progressBar = document.getElementById('pingSVG');   
-    const jitterText = document.getElementById('jitter-text');
+    const titleText = document.getElementById("ping-box-title");
+    const pingText = document.getElementById("ping-text");
+    const pingButton = document.getElementById("pingButton");
+    const pingUnitText = document.getElementById("ping-ms-text");
+    const pingAverageText = document.getElementById("ping-average-text");
+    const progress = document.getElementById("pingProgress");
+    const progressBar = document.getElementById("pingSVG");
+    const jitterText = document.getElementById("jitter-text");
 
     let isTesting = false; // Global Variable
 
-    pingButton.addEventListener('click', async () => {
+    pingButton.addEventListener("click", async () => {
+      // If already running → cancel
+      if (isTesting) {
+        isTesting = false;
+        pingButton.textContent = "Test Ping";
+        pingButton.style.background = "#4CAF50";
+        return;
+      }
 
-        // If already running → cancel
-        if (isTesting) {
-            isTesting = false;
-            pingButton.textContent = "Test Ping"; 
-            pingButton.style.background = "#4CAF50";
-            return;
+      // Otherwise start the test
+      isTesting = true;
+      pingButton.textContent = "Cancel";
+      pingButton.style.background = "#FF4444";
+      pingUnitText.textContent = "ms";
+      pingAverageText.textContent = "";
+      jitterText.textContent = "";
+
+      // Timing Variables
+      const pingTimes = [];
+      const pingInterval = 1; // ms (0.001 seconds)
+      const pingDuration = 7500; // ms (7.5 seconds)
+      const startTime = performance.now(); // Start time
+
+      // Timing Circle Variables
+      const radius = 67.5;
+      const fullArc = 2 * Math.PI * radius * 0.75; // 270° span
+      const fullCircle = 2 * Math.PI * radius; // 360° span
+
+      function animateProgress(time) {
+        // Set up timing
+        const elapsed = time - startTime;
+        const percent = Math.min(elapsed / pingDuration, 1);
+
+        // Smoothly update the progress bar
+        const startNumber = fullArc * percent;
+        const endNumber = fullCircle - startNumber;
+        progress.style.strokeDasharray = `${startNumber} ${endNumber}`;
+
+        // Turn on the 'ms' label below the ping number
+        pingUnitText.style.display = "inline";
+
+        // If it was cancelled, just stop here
+        if (!isTesting) {
+          progress.style.stroke = "#4CAF50";
+
+          const pingAverage =
+            pingTimes.reduce(
+              (accumulator, current) => accumulator + current,
+              0
+            ) / pingTimes.length;
+
+          pingText.textContent = `${pingAverage.toFixed(0)}`;
+          pingAverageText.textContent = "average";
+          pingText.style.fill = getGradientColor(pingToScore(pingAverage));
+          progress.style.stroke = getGradientColor(pingToScore(pingAverage));
+          const jitter = calculateJitter(pingTimes);
+          jitterText.textContent = `Jitter: ${jitter.toFixed(2)} ms`;
+          return;
         }
 
-        // Otherwise start the test
-        isTesting = true;
-        pingButton.textContent = "Cancel";
-        pingButton.style.background = "#FF4444";
-        pingUnitText.textContent = "ms";
-        pingAverageText.textContent = "";
-        jitterText.textContent = '';
+        if (percent < 1 && isTesting) {
+          requestAnimationFrame(animateProgress);
+        } else {
+          // Finish normally
+          isTesting = false;
+          progress.style.strokeDasharray = "318 106";
+          pingButton.textContent = "Test Ping";
+          pingButton.style.background = "#4CAF50";
 
-        // Timing Variables
-        const pingTimes = [];
-        const pingInterval = 1; // ms (0.001 seconds)
-        const pingDuration = 7500; // ms (7.5 seconds)
-        const startTime = performance.now(); // Start time
-
-        // Timing Circle Variables
-        const radius = 67.5;
-        const fullArc = 2 * Math.PI * radius * 0.75; // 270° span
-        const fullCircle = 2 * Math.PI * radius // 360° span 
-
-        function animateProgress(time) {
-            // Set up timing
-            const elapsed = time - startTime;
-            const percent = Math.min(elapsed / pingDuration, 1);
-            
-            // Smoothly update the progress bar
-            const startNumber = fullArc * percent
-            const endNumber = fullCircle - startNumber
-            progress.style.strokeDasharray = `${startNumber} ${endNumber}`;
-
-            // Turn on the 'ms' label below the ping number
-            pingUnitText.style.display = "inline";
-
-            // If it was cancelled, just stop here
-            if (!isTesting) {
-                progress.style.stroke = "#4CAF50";
-
-                const pingAverage = pingTimes.reduce((accumulator, current) => accumulator + current, 0) / pingTimes.length;
-
-                pingText.textContent = (`${pingAverage.toFixed(0)}`);
-                pingAverageText.textContent = "average";
-                pingText.style.fill = getGradientColor(pingToScore(pingAverage));
-                progress.style.stroke = getGradientColor(pingToScore(pingAverage));
-                const jitter = calculateJitter(pingTimes);
-                jitterText.textContent = `Jitter: ${jitter.toFixed(2)} ms`;
-                return;
-            };
-
-            if (percent < 1 && isTesting) {
-                requestAnimationFrame(animateProgress);
-            } else {
-                // Finish normally
-                isTesting = false;
-                progress.style.strokeDasharray = "318 106";
-                pingButton.textContent = "Test Ping";
-                pingButton.style.background = "#4CAF50";
-
-                // Set label to average
-                const pingAverage = pingTimes.reduce((a,b) => a+b, 0) / pingTimes.length;
-                pingText.textContent = `${pingAverage.toFixed(0)}`;
-                pingText.style.fill = getGradientColor(pingToScore(pingAverage));
-                progress.style.stroke = getGradientColor(pingToScore(pingAverage));
-                pingAverageText.textContent = "average";
-                const jitter = calculateJitter(pingTimes);
-                jitterText.textContent = `Jitter: ${jitter.toFixed(2)} ms`;
-            }
-
+          // Set label to average
+          const pingAverage =
+            pingTimes.reduce((a, b) => a + b, 0) / pingTimes.length;
+          pingText.textContent = `${pingAverage.toFixed(0)}`;
+          pingText.style.fill = getGradientColor(pingToScore(pingAverage));
+          progress.style.stroke = getGradientColor(pingToScore(pingAverage));
+          pingAverageText.textContent = "average";
+          const jitter = calculateJitter(pingTimes);
+          jitterText.textContent = `Jitter: ${jitter.toFixed(2)} ms`;
         }
+      }
 
-        requestAnimationFrame(animateProgress);
+      requestAnimationFrame(animateProgress);
 
-        while (performance.now() - startTime < pingDuration && isTesting) { 
-            try {
-                const pingTime = await pingHost(host);
-                pingTimes.push(pingTime);
+      while (performance.now() - startTime < pingDuration && isTesting) {
+        try {
+          const pingTime = await pingHost(host);
+          pingTimes.push(pingTime);
 
-                pingText.textContent = `${pingTime.toFixed(0)}`;
-                pingText.style.fill = getGradientColor(pingToScore(pingTime))
-                progress.style.stroke = getGradientColor(pingToScore(pingTime))
-            } catch (err) {
-                console.error('Ping failed:', err);
-            }
-            await new Promise(resolve => setTimeout(resolve, pingInterval));
+          pingText.textContent = `${pingTime.toFixed(0)}`;
+          pingText.style.fill = getGradientColor(pingToScore(pingTime));
+          progress.style.stroke = getGradientColor(pingToScore(pingTime));
+        } catch (err) {
+          console.error("Ping failed:", err);
         }
-       
+        await new Promise((resolve) => setTimeout(resolve, pingInterval));
+      }
     });
 
     function calculateJitter(pingTimes) {
-        if (pingTimes.length < 2) return 0;
+      if (pingTimes.length < 2) return 0;
 
-        let totalDiff = 0;
-        for (let i = 1; i < pingTimes.length; i++) {
-            totalDiff += Math.abs(pingTimes[i] - pingTimes[i - 1]);
-        }
-        return totalDiff / (pingTimes.length - 1);
+      let totalDiff = 0;
+      for (let i = 1; i < pingTimes.length; i++) {
+        totalDiff += Math.abs(pingTimes[i] - pingTimes[i - 1]);
+      }
+      return totalDiff / (pingTimes.length - 1);
     }
-
-
-    
-
-</script>
+  </script>
 </html>
