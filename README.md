@@ -103,5 +103,4 @@ docker run --name nginx-speedtest -p 80:80 \
 http://<your-server-ip>/10MB.bin
 ```
 
-
 ---
